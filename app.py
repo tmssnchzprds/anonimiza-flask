@@ -84,7 +84,7 @@ def index():
                 "texto": e.text,
                 "categoria": e.category,
                 "subcategoria": getattr(e, "subcategory", ""),
-                "confianza": round(e.confidence, 2)
+                "confianza": round(e.confidence_score, 2)
             } for e in entities]
             return render_template('index.html', text=text_highlighted, pii_list=pii_list)
         except Exception as e:
