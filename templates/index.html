@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>PoC Plataforma de Anonimización</title>
+    <style>
+        body { font-family: sans-serif; background: #f8f8ff; padding: 2em;}
+        .container { max-width: 850px; margin: auto; background: white; border-radius: 16px; box-shadow: 0 0 15px #ddd; padding: 2em;}
+        .pii { background: yellow; cursor: pointer; border-radius: 3px;}
+        .pii:hover { background: orange; }
+        .pii-list { margin-top: 2em; }
+        table { border-collapse: collapse; width: 100%;}
+        th, td { border: 1px solid #ddd; padding: 8px;}
+        th { background: #e0e0ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>PoC Plataforma de Anonimización</h2>
+        <form method="post" enctype="multipart/form-data">
+            <label for="document">Selecciona un archivo PDF:</label>
+            <input type="file" name="document" accept=".pdf" required>
+            <button type="submit">Procesar</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul style="color: red;">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        {% if text %}
+            <h3>Texto extraído con PII resaltada:</h3>
+            <div style="white-space: pre-wrap; border: 1px solid #eee; padding: 1em; border-radius: 8px;">{{ text|safe }}</div>
+        {% endif %}
+        {% if pii_list %}
+            <div class="pii-list">
+                <h4>Entidades PII detectadas:</h4>
+                <table>
+                    <tr>
+                        <th>Texto</th>
+                        <th>Categoría</th>
+                        <th>Subcategoría</th>
+                        <th>Confianza</th>
+                    </tr>
+                    {% for pii in pii_list %}
+                    <tr>
+                        <td>{{ pii.texto }}</td>
+                        <td>{{ pii.categoria }}</td>
+                        <td>{{ pii.subcategoria }}</td>
+                        <td>{{ pii.confianza }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
